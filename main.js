@@ -25,19 +25,11 @@ app.Button = function(opt_options) {
 }
 ol.inherits(app.Button, ol.control.Control);
 
-var layerYellow = new ol.style.Style({
-  stroke: new ol.style.Stroke({
-      color: 'rgba(0,0,0,1)',
-      width: 1
-  }),
-  fill: new ol.style.Fill({
-      color: 'rgba(255,255,0,0.3)'
-  }),
-  text: new ol.style.Text({
-    font: 'bold 16px "Open Sans", "Arial Unicode MS", "sans-serif"',
-    placement: 'line',
+var styleRed = new ol.style.Style({
+  image: new ol.style.Circle({
+    radius: 3,
     fill: new ol.style.Fill({
-      color: 'blue'
+      color: [255, 0, 0, 1]
     })
   })
 });
@@ -73,6 +65,14 @@ var nlscMatrixIds = new Array(21);
 for (var i=0; i<21; ++i) {
   nlscMatrixIds[i] = i;
 }
+
+var vector = new ol.layer.Vector({
+  source: new ol.source.Vector({
+    url: 'factories.json',
+    format: new ol.format.GeoJSON()
+  }),
+  style: styleRed
+});
 
 var baseLayer = new ol.layer.Tile({
     source: new ol.source.WMTS({
@@ -115,7 +115,7 @@ var appView = new ol.View({
 });
 
 var map = new ol.Map({
-  layers: [baseLayer, landLayer],
+  layers: [baseLayer, landLayer, vector],
   overlays: [popup],
   target: 'map',
   view: appView
@@ -200,7 +200,6 @@ map.on('singleclick', function(evt) {
           message += '<br />LANDDETATIS: ' + landCodes[p.LANDDETATIS]
         }
         $('#sidebar-main-block').html(message);
-        console.log(p);
         sidebar.open('home');
       }
       if(landTitle !== '') {
