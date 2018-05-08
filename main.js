@@ -169,18 +169,17 @@ new ol.layer.Vector({
   })
 });
 
-
 /**
  * Add a click handler to the map to render the popup.
  */
-var currentCoordinate;
-var gmlParser = new ol.format.GML();
+var currentCoordinate, currentCoordinateLonLat;
+var gmlParser = new ol.format.WFS();
 map.on('singleclick', function(evt) {
   sidebar.close();
   currentCoordinate = evt.coordinate;
-  var coordinate = ol.proj.toLonLat(evt.coordinate);
+  currentCoordinateLonLat = ol.proj.toLonLat(evt.coordinate);
   $.ajax({
-    url: 'https://nlsc.olc.tw/nlsc/dmaps/CadasMapPointQuery/' + coordinate[0] + '/' + coordinate[1],
+    url: 'https://nlsc.olc.tw/nlsc/dmaps/CadasMapPointQuery/' + currentCoordinateLonLat[0] + '/' + currentCoordinateLonLat[1],
     type: 'GET',
     success: function(r) {
       var message = '', landTitle = '';
@@ -190,17 +189,17 @@ map.on('singleclick', function(evt) {
         for(k in p) {
           if(k !== 'Shape') {
             message += '<br />' + k + ': ' + p[k];
+            if(p[k] && (k === 'LANDUSE' || k === 'LANDDETATIS')) {
+              message += ' ' + landCodes[p[k]];
+            }
           }
         }
         var landTitle = p.CITY + p.TOWN + ' ' + p.OFFICE + p.SECT + '-' + p.LANDNO;
-        if(p.LANDUSE) {
-          message += '<br />LANDUSE: ' + landCodes[p.LANDUSE]
-        }
-        if(p.LANDDETATIS) {
-          message += '<br />LANDDETATIS: ' + landCodes[p.LANDDETATIS]
-        }
         $('#sidebar-main-block').html(message);
         sidebar.open('home');
+        $('#factoryLand').val(landTitle);
+        $('#factoryLongitude').val(currentCoordinateLonLat[0]);
+        $('#factoryLatitude').val(currentCoordinateLonLat[1]);
       }
       if(landTitle !== '') {
         content.innerHTML = landTitle;
@@ -215,31 +214,31 @@ map.on('singleclick', function(evt) {
 
 var landCodes = {
   'AA': '特定農業區',
-'AB': '一般農業區',
-'AC': '鄉村區',
-'AD': '工業區',
-'AE': '森林區',
-'AF': '山坡地保育區',
-'AG': '風景區',
-'AH': '特定專用區',
-'AJ': '國家公園區',
-'EA': '甲種建築用地',
-'EB': '乙種建築用地',
-'EC': '丙種建築用地',
-'ED': '丁種建築用地',
-'EE': '農牧用地',
-'EF': '礦業用地',
-'EG': '交通用地',
-'EH': '水利用地',
-'EJ': '遊憩用地',
-'EK': '古蹟保存用地',
-'EL': '生態保護用地',
-'EM': '國土保安用地',
-'EN': '墳墓用地',
-'EP': '特定目的事業用地',
-'EQ': '鹽業用地',
-'ER': '窯業用地',
-'ES': '林業用地',
-'ET': '養殖用地',
-'EZ': '暫未編定',
+  'AB': '一般農業區',
+  'AC': '鄉村區',
+  'AD': '工業區',
+  'AE': '森林區',
+  'AF': '山坡地保育區',
+  'AG': '風景區',
+  'AH': '特定專用區',
+  'AJ': '國家公園區',
+  'EA': '甲種建築用地',
+  'EB': '乙種建築用地',
+  'EC': '丙種建築用地',
+  'ED': '丁種建築用地',
+  'EE': '農牧用地',
+  'EF': '礦業用地',
+  'EG': '交通用地',
+  'EH': '水利用地',
+  'EJ': '遊憩用地',
+  'EK': '古蹟保存用地',
+  'EL': '生態保護用地',
+  'EM': '國土保安用地',
+  'EN': '墳墓用地',
+  'EP': '特定目的事業用地',
+  'EQ': '鹽業用地',
+  'ER': '窯業用地',
+  'ES': '林業用地',
+  'ET': '養殖用地',
+  'EZ': '暫未編定',
 };

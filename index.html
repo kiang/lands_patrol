@@ -36,7 +36,7 @@
         border: 1px solid #cccccc;
         bottom: 12px;
         left: -50px;
-        min-width: 450px;
+        min-width: 300px;
       }
       .ol-popup:after, .ol-popup:before {
         top: 100%;
@@ -97,6 +97,32 @@
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
                 <p id="sidebar-main-block"></p>
+                <hr />
+                <p>
+                  <form action="https://lands.olc.tw/forward.php" method="post" enctype="multipart/form-data" target="_blank">
+                    <div class="form-group">
+                      <label for="factoryPicture">照片</label>
+                      <input type="file" class="form-control-file" id="factoryPicture" name="picture">
+                    </div>
+                    <div class="form-group">
+                      <label for="factoryInfo">工廠名稱或可能型態</label>
+                      <input type="text" class="form-control" id="factoryInfo" name="info">
+                    </div>
+                    <div class="form-group">
+                      <label for="factoryLand">地號</label>
+                      <input type="text" class="form-control" id="factoryLand" name="land">
+                    </div>
+                    <div class="form-group">
+                      <label for="factoryLongitude">經度</label>
+                      <input type="text" class="form-control" id="factoryLongitude" name="longitude">
+                    </div>
+                    <div class="form-group">
+                      <label for="factoryLatitude">緯度</label>
+                      <input type="text" class="form-control" id="factoryLatitude" name="latitude">
+                    </div>
+                    <button type="submit" class="btn btn-primary">送出</button>
+                  </form>
+                </p>
             </div>
             <div class="sidebar-pane" id="fb">
               <div class="fb-page" data-href="https://www.facebook.com/k.olc.tw/" data-tabs="timeline" data-width="380" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/k.olc.tw/" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/k.olc.tw/">江明宗</a></blockquote></div>
