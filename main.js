@@ -77,7 +77,7 @@ var baseLayer = new ol.layer.Tile({
     source: new ol.source.WMTS({
         matrixSet: 'EPSG:3857',
         format: 'image/png',
-        url: 'http://wmts.nlsc.gov.tw/wmts',
+        url: 'https://wmts.nlsc.gov.tw/wmts',
         layer: 'EMAP',
         tileGrid: new ol.tilegrid.WMTS({
             origin: ol.extent.getTopLeft(projectionExtent),
@@ -86,7 +86,7 @@ var baseLayer = new ol.layer.Tile({
         }),
         style: 'default',
         wrapX: true,
-        attributions: '<a href="http://maps.nlsc.gov.tw/" target="_blank">國土測繪圖資服務雲</a>'
+        attributions: '<a href="https://maps.nlsc.gov.tw/" target="_blank">國土測繪圖資服務雲</a>'
     }),
     opacity: 0.5
 });
@@ -95,7 +95,7 @@ var landLayer = new ol.layer.Tile({
     source: new ol.source.WMTS({
         matrixSet: 'EPSG:3857',
         format: 'image/png',
-        url: 'http://35.187.152.219/lands/S_Maps/wmts/DMAPS/default/EPSG:3857/{TileMatrix}/{TileRow}/{TileCol}',
+        url: 'https://nlsc.olc.tw/lands/S_Maps/wmts/DMAPS/default/EPSG:3857/{TileMatrix}/{TileRow}/{TileCol}',
         requestEncoding: 'REST',
         tileGrid: new ol.tilegrid.WMTS({
             origin: ol.extent.getTopLeft(projectionExtent),
@@ -103,7 +103,7 @@ var landLayer = new ol.layer.Tile({
             matrixIds: matrixIds
         }),
         wrapX: true,
-        attributions: '<a href="http://maps.nlsc.gov.tw/" target="_blank">國土測繪圖資服務雲</a>'
+        attributions: '<a href="https://maps.nlsc.gov.tw/" target="_blank">國土測繪圖資服務雲</a>'
     }),
     opacity: 0.5
 });
@@ -188,7 +188,7 @@ map.on('singleclick', function(evt) {
   currentCoordinate = evt.coordinate;
   var coordinate = ol.proj.toLonLat(evt.coordinate);
   $.ajax({
-    url: 'http://35.187.152.219/nlsc/dmaps/CadasMapPointQuery/' + coordinate[0] + '/' + coordinate[1],
+    url: 'https://nlsc.olc.tw/nlsc/dmaps/CadasMapPointQuery/' + coordinate[0] + '/' + coordinate[1],
     type: 'GET',
     success: function(r) {
       var message = '';
