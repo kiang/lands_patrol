@@ -1,3 +1,4 @@
+var sidebar = new ol.control.Sidebar({ element: 'sidebar', position: 'right' });
 window.app = {};
 var app = window.app;
 
@@ -117,20 +118,10 @@ var map = new ol.Map({
   layers: [baseLayer, landLayer],
   overlays: [popup],
   target: 'map',
-  view: appView,
-  controls: ol.control.defaults().extend([
-    new app.Button({
-      bClassName: 'app-button1',
-      bText: '原',
-      bHref: 'https://github.com/kiang/lands_patrol'
-    }),
-    new app.Button({
-      bClassName: 'app-button2',
-      bText: '江',
-      bHref: 'http://k.olc.tw/'
-    })
-  ])
+  view: appView
 });
+
+map.addControl(sidebar);
 
 var geolocation = new ol.Geolocation({
   projection: appView.getProjection()
@@ -185,26 +176,35 @@ new ol.layer.Vector({
 var currentCoordinate;
 var gmlParser = new ol.format.GML();
 map.on('singleclick', function(evt) {
+  sidebar.close();
   currentCoordinate = evt.coordinate;
   var coordinate = ol.proj.toLonLat(evt.coordinate);
   $.ajax({
     url: 'https://nlsc.olc.tw/nlsc/dmaps/CadasMapPointQuery/' + coordinate[0] + '/' + coordinate[1],
     type: 'GET',
     success: function(r) {
-      var message = '';
+      var message = '', landTitle = '';
       var objs = gmlParser.readFeatures(r);
       if(objs.length > 0) {
         var p = objs[0].getProperties();
-        message += p.CITY + p.TOWN + ' ' + p.SECT + '-' + p.LANDNO;
+        for(k in p) {
+          if(k !== 'Shape') {
+            message += '<br />' + k + ': ' + p[k];
+          }
+        }
+        var landTitle = p.CITY + p.TOWN + ' ' + p.OFFICE + p.SECT + '-' + p.LANDNO;
         if(p.LANDUSE) {
-          message += '<br />LANDUSE: ' + p.LANDUSE
+          message += '<br />LANDUSE: ' + landCodes[p.LANDUSE]
         }
         if(p.LANDDETATIS) {
-          message += '<br />LANDDETATIS: ' + p.LANDDETATIS
+          message += '<br />LANDDETATIS: ' + landCodes[p.LANDDETATIS]
         }
+        $('#sidebar-main-block').html(message);
+        console.log(p);
+        sidebar.open('home');
       }
-      if(message !== '') {
-        content.innerHTML = message;
+      if(landTitle !== '') {
+        content.innerHTML = landTitle;
         popup.setPosition(currentCoordinate);
       } else {
         popup.setPosition(undefined);
@@ -213,3 +213,34 @@ map.on('singleclick', function(evt) {
     }
   });
 });
+
+var landCodes = {
+  'AA': '特定農業區',
+'AB': '一般農業區',
+'AC': '鄉村區',
+'AD': '工業區',
+'AE': '森林區',
+'AF': '山坡地保育區',
+'AG': '風景區',
+'AH': '特定專用區',
+'AJ': '國家公園區',
+'EA': '甲種建築用地',
+'EB': '乙種建築用地',
+'EC': '丙種建築用地',
+'ED': '丁種建築用地',
+'EE': '農牧用地',
+'EF': '礦業用地',
+'EG': '交通用地',
+'EH': '水利用地',
+'EJ': '遊憩用地',
+'EK': '古蹟保存用地',
+'EL': '生態保護用地',
+'EM': '國土保安用地',
+'EN': '墳墓用地',
+'EP': '特定目的事業用地',
+'EQ': '鹽業用地',
+'ER': '窯業用地',
+'ES': '林業用地',
+'ET': '養殖用地',
+'EZ': '暫未編定',
+};
