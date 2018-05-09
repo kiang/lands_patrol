@@ -244,3 +244,14 @@ var landCodes = {
   'ET': '養殖用地',
   'EZ': '暫未編定',
 };
+
+$('#btnGoogleMap').click(function() {
+  var url = 'https://www.google.com/maps/dir/?api=1';
+  var latitude = $('#factoryLatitude').val();
+  var longitude = $('#factoryLongitude').val();
+  if(latitude !== '' && longitude !== '') {
+    url += '&destination=' + latitude + ',' + longitude;
+  }
+  window.open(url, '_blank');
+  return false;
+});
