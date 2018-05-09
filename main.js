@@ -176,6 +176,7 @@ var currentCoordinate, currentCoordinateLonLat;
 var gmlParser = new ol.format.WFS();
 map.on('singleclick', function(evt) {
   sidebar.close();
+  $('#loadingModal').modal('show');
   currentCoordinate = evt.coordinate;
   currentCoordinateLonLat = ol.proj.toLonLat(evt.coordinate);
   $.ajax({
@@ -208,6 +209,7 @@ map.on('singleclick', function(evt) {
         popup.setPosition(undefined);
         closer.blur();
       }
+      $('#loadingModal').modal('hide');
     }
   });
 });
